@@ -696,18 +696,10 @@
             text-transform: uppercase;
         }
 
-        /* Tablet landscape: Raise choices container and ensure scroll */
-        @media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+        /* Tablet landscape: Raise choices container */
+        @media (max-width: 1024px) and (orientation: landscape) {
             #choices-container {
-                bottom: 5%;
-                top: 15%;
-                max-height: none;
-                justify-content: center;
-            }
-
-            .choice-btn {
-                padding: 10px 20px;
-                font-size: 14px;
+                bottom: 15%;
             }
         }
 
