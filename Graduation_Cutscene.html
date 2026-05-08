@@ -619,26 +619,25 @@
             }
         }
 
-        /* Mobile portrait: Map on top, text on bottom */
+        /* Mobile portrait: Map and text centered as a unit, text below map */
         @media (max-width: 768px) and (orientation: portrait) {
             .sprite.journeymap {
                 position: absolute;
-                top: 5%;
+                top: 50%;
                 left: 50%;
-                transform: translateX(-50%);
+                transform: translate(-50%, -105%);
                 max-width: 85%;
-                max-height: 40vh;
+                max-height: 38vh;
             }
 
             #journey-text {
                 position: absolute;
-                top: auto;
-                bottom: 8%;
+                top: 50%;
                 left: 50%;
                 right: auto;
-                transform: translateX(-50%);
+                transform: translate(-50%, 5%);
                 width: 90%;
-                max-height: 45vh;
+                max-height: 42vh;
                 overflow-y: auto;
                 font-size: 14px;
                 padding: 20px;
