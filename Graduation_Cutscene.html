@@ -697,7 +697,16 @@
         }
 
         /* Tablet/laptop landscape: Raise choices higher */
+        /* Covers: all iPads (up to 1366px), Tab S8 (~1280px), most tablets */
         @media (max-width: 1400px) and (orientation: landscape) {
+            #choices-container {
+                top: auto;
+                bottom: 18%;
+            }
+        }
+
+        /* Safety net: any landscape device with limited height */
+        @media (max-height: 900px) and (orientation: landscape) {
             #choices-container {
                 top: auto;
                 bottom: 18%;
