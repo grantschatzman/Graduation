@@ -644,6 +644,67 @@
             }
         }
 
+        /* Credits */
+        #credits-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #F5E6D3;
+            opacity: 0;
+            transition: opacity 1s ease;
+            z-index: 100;
+        }
+
+        #credits-box.visible {
+            opacity: 1;
+        }
+
+        .credits-title {
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .credits-item {
+            margin-bottom: 25px;
+            font-size: 18px;
+        }
+
+        .credits-role {
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #D4A574;
+            margin-bottom: 5px;
+        }
+
+        .credits-composers {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #c0c0c0;
+        }
+
+        .credits-note {
+            display: block;
+            font-size: 13px;
+            font-style: italic;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        /* Tablet landscape: Raise choices container */
+        @media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+            #choices-container {
+                bottom: 18%;
+            }
+        }
+
         /* Mobile landscape: Map left, text right (smaller) */
         @media (max-width: 900px) and (orientation: landscape) {
             .sprite.journeymap {
@@ -691,6 +752,8 @@
         <div id="choices-container"></div>
 
         <div id="journey-text"></div>
+
+        <div id="credits-box"></div>
 
         <div id="comic-text-1" class="comic-text">WE LOVE YOU!</div>
         <div id="comic-text-2" class="comic-text">we love you!!</div>
@@ -1093,6 +1156,22 @@
                 sprites: [{ src: SPRITES.journeyMap, class: "journeymap" }],
                 isJourneyScene: true,
                 journeyText: "Four great cities lie ready to welcome you. You may visit, or not visit, any of them as you please. Any of these cities you should choose to visit has lodging prepared for you, along with a guidelist of gaming-world locales and any letters of introduction you might desire to a certain cadre of local characters.<br><br>Beyond what is prepared are untold other wonders for your discovery alone. When you're ready, you may <a href=\"https://docs.google.com/spreadsheets/d/1t1-xVZb9OgfHaKrSYdvjro6prz3oIv9y59xI7soF3bQ/edit?usp=sharing\" target=\"_blank\">choose your own adventure</a>.",
+                choices: [{ text: "The End", goto: "credits" }]
+            },
+
+            // CREDITS
+            "credits": {
+                background: null,
+                isCredits: true,
+                creditsText: `
+                    <div class="credits-title">Credits</div>
+                    <div class="credits-item"><span class="credits-role">Created by</span>Grant Schatzman</div>
+                    <div class="credits-item"><span class="credits-role">Music from</span><em>Omori</em></div>
+                    <div class="credits-composers">Pedro Silva (Slime Girls)<br>Jami Lynne (Clover & Sealife)<br>Calum Bowen (Bo En)</div>
+                    <div class="credits-item"><span class="credits-role">Setting imagination</span>Mike Schatzman</div>
+                    <div class="credits-item"><span class="credits-role">Background design</span>Nano Banana<br><span class="credits-note">(sorry, don't hate me, I never learned to draw)</span></div>
+                    <div class="credits-item"><span class="credits-role">Special messages</span>Loved ones everywhere</div>
+                `,
                 isEnd: true
             }
         };
@@ -1201,6 +1280,7 @@
             choicesContainer.innerHTML = '';
             spriteContainer.innerHTML = '';
             document.getElementById('journey-text').classList.remove('visible');
+            document.getElementById('credits-box').classList.remove('visible');
             document.querySelectorAll('.comic-text').forEach(el => el.classList.remove('visible'));
 
             // Hide dialogue box but keep it positioned off-screen during transition
@@ -1320,6 +1400,13 @@
                 const journeyText = document.getElementById('journey-text');
                 journeyText.innerHTML = scene.journeyText;
                 setTimeout(() => journeyText.classList.add('visible'), 300);
+            }
+
+            // Handle credits scene
+            if (scene.isCredits) {
+                const creditsBox = document.getElementById('credits-box');
+                creditsBox.innerHTML = scene.creditsText;
+                setTimeout(() => creditsBox.classList.add('visible'), 300);
             }
 
             // Handle floating comic text (staggered for chaotic effect)
