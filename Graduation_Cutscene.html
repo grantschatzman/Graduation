@@ -661,41 +661,39 @@
             opacity: 1;
         }
 
-        .credits-title {
-            font-size: 36px;
-            font-weight: bold;
-            letter-spacing: 4px;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        .credits-item {
-            margin-bottom: 25px;
-            font-size: 18px;
-        }
-
         .credits-role {
-            display: block;
             font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             color: #D4A574;
-            margin-bottom: 5px;
+            margin-bottom: 12px;
+        }
+
+        .credits-name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
         .credits-composers {
             font-size: 16px;
             line-height: 1.8;
-            margin-bottom: 25px;
             color: #c0c0c0;
+            margin-top: 15px;
         }
 
         .credits-note {
-            display: block;
-            font-size: 13px;
+            font-size: 14px;
             font-style: italic;
             color: #a0a0a0;
-            margin-top: 5px;
+            margin-top: 10px;
+        }
+
+        .credits-final {
+            font-size: 42px;
+            font-weight: bold;
+            letter-spacing: 6px;
+            text-transform: uppercase;
         }
 
         /* Tablet landscape: Raise choices container */
@@ -1163,15 +1161,14 @@
             "credits": {
                 background: null,
                 isCredits: true,
-                creditsText: `
-                    <div class="credits-title">Credits</div>
-                    <div class="credits-item"><span class="credits-role">Created by</span>Grant Schatzman</div>
-                    <div class="credits-item"><span class="credits-role">Music from</span><em>Omori</em></div>
-                    <div class="credits-composers">Pedro Silva (Slime Girls)<br>Jami Lynne (Clover & Sealife)<br>Calum Bowen (Bo En)</div>
-                    <div class="credits-item"><span class="credits-role">Setting imagination</span>Mike Schatzman</div>
-                    <div class="credits-item"><span class="credits-role">Background design</span>Nano Banana<br><span class="credits-note">(sorry, don't hate me, I never learned to draw)</span></div>
-                    <div class="credits-item"><span class="credits-role">Special messages</span>Loved ones everywhere</div>
-                `,
+                credits: [
+                    { role: "Created by", name: "Grant Schatzman" },
+                    { role: "Music from", name: "<em>Omori</em>", sub: "Pedro Silva (Slime Girls)<br>Jami Lynne (Clover & Sealife)<br>Calum Bowen (Bo En)" },
+                    { role: "Setting imagination", name: "Mike Schatzman" },
+                    { role: "Background design", name: "Nano Banana", note: "(sorry, don't hate me, I never learned to draw)" },
+                    { role: "Special messages", name: "Loved ones everywhere" },
+                    { role: "", name: "The End", isEnd: true }
+                ],
                 isEnd: true
             }
         };
@@ -1402,11 +1399,41 @@
                 setTimeout(() => journeyText.classList.add('visible'), 300);
             }
 
-            // Handle credits scene
-            if (scene.isCredits) {
+            // Handle credits scene - animate one at a time
+            if (scene.isCredits && scene.credits) {
                 const creditsBox = document.getElementById('credits-box');
-                creditsBox.innerHTML = scene.creditsText;
-                setTimeout(() => creditsBox.classList.add('visible'), 300);
+                let creditIndex = 0;
+
+                function showNextCredit() {
+                    if (creditIndex >= scene.credits.length) return;
+
+                    const credit = scene.credits[creditIndex];
+                    let html = '';
+
+                    if (credit.isEnd) {
+                        html = `<div class="credits-final">${credit.name}</div>`;
+                    } else {
+                        html = `<div class="credits-role">${credit.role}</div>`;
+                        html += `<div class="credits-name">${credit.name}</div>`;
+                        if (credit.sub) html += `<div class="credits-composers">${credit.sub}</div>`;
+                        if (credit.note) html += `<div class="credits-note">${credit.note}</div>`;
+                    }
+
+                    creditsBox.innerHTML = html;
+                    creditsBox.classList.add('visible');
+
+                    creditIndex++;
+
+                    if (creditIndex < scene.credits.length) {
+                        // Fade out after 2.5s, then show next
+                        setTimeout(() => {
+                            creditsBox.classList.remove('visible');
+                            setTimeout(showNextCredit, 800);
+                        }, 2500);
+                    }
+                }
+
+                setTimeout(showNextCredit, 500);
             }
 
             // Handle floating comic text (staggered for chaotic effect)
