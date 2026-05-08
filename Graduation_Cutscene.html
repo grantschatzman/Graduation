@@ -696,12 +696,11 @@
             text-transform: uppercase;
         }
 
-        /* Tablet landscape: Center choices below dialogue */
-        @media (max-width: 1024px) and (orientation: landscape) {
+        /* Tablet/laptop landscape: Raise choices higher */
+        @media (max-width: 1400px) and (orientation: landscape) {
             #choices-container {
-                top: 45%;
-                bottom: 10%;
-                justify-content: center;
+                top: auto;
+                bottom: 18%;
             }
         }
 
