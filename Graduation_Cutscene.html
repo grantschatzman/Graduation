@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Great Achievement - And the Adventure Beyond</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #cutscene-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease;
+            image-rendering: pixelated;
+        }
+
+        #background.visible {
+            opacity: 1;
+        }
+
+        /* Character/Sprite positioning */
+        .sprite {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            image-rendering: pixelated;
+        }
+
+        .sprite.visible {
+            opacity: 1;
+        }
+
+        .sprite.family {
+            bottom: 10%;
+            left: 8%;
+            max-height: 30vh;
+        }
+
+        .sprite.city {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sprite.journeymap {
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            max-width: 45%;
+            max-height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Journey scene text panel */
+        #journey-text {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42%;
+            background: rgba(40, 40, 60, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            color: #F5E6D3;
+            font-size: 17px;
+            line-height: 1.7;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        #journey-text.visible {
+            opacity: 1;
+        }
+
+        #journey-text a {
+            color: #7ec8e3;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        #journey-text a:hover {
+            color: #a8e6cf;
+        }
+
+        /* Floating comic text - chaotic overlapping "we love you"s */
+        .comic-text {
+            position: absolute;
+            font-weight: bold;
+            opacity: 0;
+            z-index: 90;
+            pointer-events: none;
+            white-space: nowrap;
+            text-shadow:
+                2px 2px 0 #8B4545,
+                -1px -1px 0 #8B4545,
+                1px -1px 0 #8B4545,
+                -1px 1px 0 #8B4545,
+                3px 3px 6px rgba(0,0,0,0.5);
+        }
+
+        .comic-text.visible {
+            opacity: 1;
+        }
+
+        #comic-text-1 {
+            left: 2%;
+            bottom: 48%;
+            font-family: 'Comic Sans MS', 'Chalkboard', cursive;
+            font-size: 26px;
+            color: #FFE4B5;
+            animation: float-wobble-1 2.3s ease-in-out infinite;
+        }
+
+        #comic-text-2 {
+            left: 8%;
+            bottom: 38%;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 20px;
+            color: #FFB6C1;
+            animation: float-wobble-2 1.8s ease-in-out infinite;
+        }
+
+        #comic-text-3 {
+            left: 1%;
+            bottom: 52%;
+            font-family: 'Georgia', serif;
+            font-size: 32px;
+            font-style: italic;
+            color: #98FB98;
+            animation: float-wobble-3 2.7s ease-in-out infinite;
+        }
+
+        #comic-text-4 {
+            left: 12%;
+            bottom: 44%;
+            font-family: 'Trebuchet MS', 'Verdana', sans-serif;
+            font-size: 18px;
+            color: #87CEEB;
+            animation: float-wobble-4 2.1s ease-in-out infinite;
+        }
+
+        @keyframes float-wobble-1 {
+            0%, 100% { transform: translateY(0) rotate(-8deg); }
+            25% { transform: translateY(-10px) rotate(-3deg); }
+            50% { transform: translateY(-5px) rotate(-10deg); }
+            75% { transform: translateY(-12px) rotate(-5deg); }
+        }
+
+        @keyframes float-wobble-2 {
+            0%, 100% { transform: translateY(0) rotate(12deg); }
+            33% { transform: translateY(-8px) rotate(8deg); }
+            66% { transform: translateY(-4px) rotate(15deg); }
+        }
+
+        @keyframes float-wobble-3 {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            20% { transform: translateY(-6px) rotate(2deg); }
+            40% { transform: translateY(-10px) rotate(-5deg); }
+            60% { transform: translateY(-4px) rotate(0deg); }
+            80% { transform: translateY(-8px) rotate(-2deg); }
+        }
+
+        @keyframes float-wobble-4 {
+            0%, 100% { transform: translateY(0) rotate(6deg); }
+            50% { transform: translateY(-14px) rotate(-4deg); }
+        }
+
+        /* Dialogue Box */
+        #dialogue-box {
+            position: absolute;
+            max-width: 85%;
+            padding: 25px;
+            border-radius: 15px;
+            color: #F5E6D3;
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        #dialogue-box.visible {
+            opacity: 1;
+        }
+
+        #dialogue-box.narrator {
+            background: rgba(61, 90, 107, 0.95);
+        }
+
+        #dialogue-box.internal {
+            background: rgba(75, 75, 95, 0.95);
+            border: 2px solid rgba(150, 150, 200, 0.5);
+            font-style: italic;
+        }
+
+        #dialogue-box.voice {
+            background: rgba(139, 69, 69, 0.95);
+        }
+
+        #dialogue-box.top {
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #dialogue-box.bottom {
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #dialogue-box.center {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .speaker-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #D4A574;
+        }
+
+        /* Title Screen */
+        #title-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(40, 40, 60, 0.95);
+            color: #F5E6D3;
+            padding: 40px 60px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+            z-index: 150;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        #title-box.visible {
+            opacity: 1;
+        }
+
+        #title-main {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        #title-subtitle {
+            font-size: 24px;
+            letter-spacing: 2px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Decision Buttons */
+        #choices-container {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        #choices-container.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .choice-btn {
+            background: rgba(139, 69, 69, 0.9);
+            color: #F5E6D3;
+            border: 2px solid rgba(245, 230, 211, 0.5);
+            padding: 12px 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 380px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .choice-btn:hover {
+            background: rgba(169, 89, 89, 0.95);
+            border-color: #F5E6D3;
+            transform: scale(1.02);
+        }
+
+        .choice-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .choice-btn.disabled:hover {
+            transform: none;
+            background: rgba(139, 69, 69, 0.9);
+            border-color: rgba(245, 230, 211, 0.5);
+        }
+
+        /* Conversation Hub */
+        #conversation-hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(40, 40, 60, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 130;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            width: 90%;
+            max-width: 550px;
+            max-height: 75vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #conversation-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        #conversation-hub.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Custom scrollbar for conversation hub */
+        #conversation-hub::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #conversation-hub::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        #conversation-hub::-webkit-scrollbar-thumb {
+            background: rgba(245, 230, 211, 0.5);
+            border-radius: 4px;
+        }
+
+        #conversation-hub::-webkit-scrollbar-thumb:hover {
+            background: rgba(245, 230, 211, 0.7);
+        }
+
+        #conversation-hub h2 {
+            color: #F5E6D3;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .conversation-option {
+            background: rgba(100, 80, 100, 0.8);
+            color: #F5E6D3;
+            border: 2px solid rgba(245, 230, 211, 0.3);
+            padding: 14px 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: left;
+            display: block;
+            position: relative;
+            z-index: 131;
+            flex-shrink: 0;
+        }
+
+        .conversation-option:hover {
+            background: rgba(130, 100, 130, 0.9);
+            border-color: #F5E6D3;
+        }
+
+        .conversation-option.completed {
+            opacity: 0.4;
+            text-decoration: line-through;
+            cursor: not-allowed;
+        }
+
+        .conversation-option.completed:hover {
+            background: rgba(100, 80, 100, 0.8);
+            border-color: rgba(245, 230, 211, 0.3);
+        }
+
+        #leave-hub-btn {
+            background: rgba(80, 120, 100, 0.9);
+            margin-top: 15px;
+        }
+
+        /* Controls */
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 200;
+        }
+
+        .control-btn {
+            color: #F5E6D3;
+            font-size: 14px;
+            opacity: 0.6;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .control-btn:hover {
+            opacity: 1;
+            background: rgba(0,0,0,0.8);
+            border-color: #F5E6D3;
+        }
+
+        .control-btn.hidden {
+            display: none;
+        }
+
+        /* Volume Control */
+        #volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        #volume-control:hover {
+            opacity: 1;
+            background: rgba(0,0,0,0.8);
+            border-color: #F5E6D3;
+        }
+
+        #volume-icon {
+            color: #F5E6D3;
+            font-size: 16px;
+            min-width: 20px;
+        }
+
+        #volume-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(245, 230, 211, 0.3);
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #F5E6D3;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: #F5E6D3;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Time lapse effect */
+        @keyframes timelapse {
+            0% { filter: brightness(1) blur(0px); }
+            25% { filter: brightness(0.7) blur(2px); }
+            50% { filter: brightness(0.5) blur(4px); }
+            75% { filter: brightness(0.7) blur(2px); }
+            100% { filter: brightness(1) blur(0px); }
+        }
+
+        .timelapse-effect {
+            animation: timelapse 3s ease-in-out;
+        }
+
+        /* Screen fade overlay for transitions */
+        #screen-fade {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 500;
+            transition: opacity 2s ease;
+        }
+
+        #screen-fade.fade-out {
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #dialogue-box {
+                max-width: 90%;
+                font-size: 16px;
+                padding: 20px;
+            }
+
+            .choice-btn {
+                min-width: 280px;
+                font-size: 14px;
+                padding: 12px 20px;
+            }
+
+            #title-main {
+                font-size: 32px;
+            }
+
+            #title-subtitle {
+                font-size: 18px;
+            }
+
+            .comic-text {
+                font-size: 80% !important;
+            }
+
+            #journey-text {
+                width: 90%;
+                right: 5%;
+                font-size: 14px;
+            }
+
+            .sprite.journeymap {
+                max-width: 90%;
+                position: relative;
+                left: 50%;
+                transform: translate(-50%, 0);
+                margin-bottom: 20px;
+            }
+
+            #controls {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+
+        /* Very small screens (phones) */
+        @media (max-width: 480px) {
+            #dialogue-box {
+                font-size: 14px;
+                padding: 15px;
+            }
+
+            .choice-btn {
+                min-width: 240px;
+                font-size: 13px;
+            }
+
+            #title-main {
+                font-size: 24px;
+            }
+
+            #title-subtitle {
+                font-size: 14px;
+            }
+
+            .conversation-option {
+                font-size: 13px;
+                padding: 10px 15px;
+            }
+        }
+
+        /* Prevent text selection on touch devices */
+        @media (pointer: coarse) {
+            * {
+                -webkit-tap-highlight-color: transparent;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="cutscene-container">
+        <img id="background" src="" alt="Background">
+        <div id="sprite-container"></div>
+
+        <div id="title-box">
+            <div id="title-main">A Great Achievement</div>
+            <div id="title-subtitle">And the Adventure Beyond</div>
+        </div>
+
+        <div id="dialogue-box">
+            <div class="speaker-name"></div>
+            <div class="dialogue-text"></div>
+        </div>
+
+        <div id="choices-container"></div>
+
+        <div id="journey-text"></div>
+
+        <div id="comic-text-1" class="comic-text">WE LOVE YOU!</div>
+        <div id="comic-text-2" class="comic-text">we love you!!</div>
+        <div id="comic-text-3" class="comic-text">We Love You</div>
+        <div id="comic-text-4" class="comic-text">WE LOVE YOU!</div>
+
+        <div id="screen-fade"></div>
+
+        <div id="controls">
+            <div id="volume-control">
+                <span id="volume-icon">&#128266;</span>
+                <input type="range" id="volume-slider" min="0" max="100" value="60">
+            </div>
+            <button id="back-btn" class="control-btn hidden">&#9664; Back</button>
+            <div id="click-indicator" class="control-btn">&#9654; Continue</div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const ASSET_BASE = ".";
+
+        const MUSIC_TRACKS = {
+            title: "Music/001 - Title.mp3",
+            planetarium: "Music/021 - Sugar Star Planetarium.mp3",
+            byYourSide: "Music/005 - By Your Side. (1).mp3",
+            spacesInBetween: "Music/004 - Spaces In-Between.mp3",
+            poemsInFog: "Music/018 - Poems In The Fog (1).mp3"
+        };
+
+        const SOUND_EFFECTS = {
+            oof: "Music/Oof.mp3",
+            trainWhistle: "Music/trainwhistle.mp3"
+        };
+
+        const SPRITES = {
+            trainStation: "Sprites/TrainStation.png",
+            family: "Sprites/Family.png",
+            city: "Sprites/City.png",
+            journeyMap: "Sprites/JourneyMap.png"
+        };
+
+        // ============================================
+        // SCENE DEFINITIONS (Decision Tree)
+        // ============================================
+        const scenes = {
+            // TITLE SCREEN
+            "title": {
+                background: null,
+                showTitle: true,
+                music: "title",
+                next: "intro1"
+            },
+
+            // INTRO SEQUENCE
+            "intro1": {
+                background: SPRITES.trainStation,
+                dialogue: "You're in the train station, your beat-up leather suitcase by your side. Today is the day. You have a ticket that will take you as far as you choose to go.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                music: "planetarium",
+                next: "intro2"
+            },
+            "intro2": {
+                background: SPRITES.trainStation,
+                dialogue: "The line is long, and there are many stops along the way. Who knows? Maybe one of them will even become a new home.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                next: "intro3"
+            },
+            "intro3": {
+                background: SPRITES.trainStation,
+                dialogue: "The train is ready for you to board. Smoke begins to trickle out the locomotive's stack as the conductor stokes the firebox. As you reach for your suitcase, you notice some commotion by the station entrance.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                music: null,
+                soundEffect: "trainWhistle",
+                next: "intro4"
+            },
+            "intro4": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "A throng of familiar faces tumble into the station, checking the time as they try to catch their breath, straighten their windblown hair, and rebutton their shirts.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                music: "byYourSide",
+                next: "intro4b"
+            },
+            "intro4b": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "Everyone is wearing nice clothes, but now they look dishevelled and... a little sweaty?",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                next: "intro5"
+            },
+            "intro5": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "\"I told you--\" \"--we made it!\" \"Look, there's still time!\"",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                next: "intro6"
+            },
+            "intro6": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "Oh. It's your family and your friends. They want to send you off.",
+                dialogueStyle: "internal",
+                dialoguePosition: "center",
+                next: "intro7"
+            },
+            "intro7": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "There's still a little time before the train departs. Do you talk to them?",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                choices: [
+                    { text: "Look the other way, whistle nonchalantly, and pretend you don't see them", goto: "A1" },
+                    { text: "Grab your bag and sneak onto the train", goto: "B1" },
+                    { text: "Go talk to the sweaty people", goto: "C1" }
+                ]
+            },
+
+            // BRANCH A: WHISTLE AND IGNORE
+            "A1": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "You hear a voice pierce through the station, pinging off the vaulted ceilings like a soloist in a cathedral choir. \"Hey, I know that whistle anywhere! Over there...\"",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                next: "A1b"
+            },
+            "A1b": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "The voice moves closer.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "center",
+                choices: [
+                    { text: "Quick, the train, the train!", goto: "B1" },
+                    { text: "Go greet the sweaty people", goto: "C1" }
+                ]
+            },
+
+            // BRANCH B: SNEAK TO TRAIN
+            "B1": {
+                background: SPRITES.trainStation,
+                dialogue: "You grunt a little as you heft your bag. Maybe you should have left some of those books behind. The bag knocks into your knees as you shuffle... stealthily?... toward the train.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                next: "B1b"
+            },
+            "B1b": {
+                background: SPRITES.trainStation,
+                dialogue: "Your legs are starting to burn. The train feels so close yet so far.",
+                dialogueStyle: "internal",
+                dialoguePosition: "center",
+                choices: [
+                    { text: "Go, go, go!", goto: "B2" },
+                    { text: "Stop and rest", goto: "C1" }
+                ]
+            },
+            "B2": {
+                background: SPRITES.trainStation,
+                dialogue: "You make it to the door of your train car and heave your bag up the steps, ducking out of sight around the corner and collapsing into a seat.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                next: "B2b"
+            },
+            "B2b": {
+                background: SPRITES.trainStation,
+                dialogue: "Your clothes are dishevelled and - *sniff* - okay, a little sweaty, but you made it.",
+                dialogueStyle: "internal",
+                dialoguePosition: "center",
+                next: "B2c"
+            },
+            "B2c": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "Something catches the corner of your eye. Turning to look out the window, you see -- ope, yep -- all your family and friends on the platform, beaming and waving at you like absolute crazy people.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                music: "poemsInFog",
+                next: "departure_sneak"
+            },
+
+            // BRANCH C: TALK TO THEM
+            "C1": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "\"Oh, we're so glad we caught you! We know this isn't 'goodbye', but we wanted a chance to send you off on your journey. Actually, I think some people have something to say to you.\"",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                next: "conversation_hub"
+            },
+
+            // CONVERSATION HUB - Uses standard choice buttons for reliability
+            "conversation_hub": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "Who would you like to talk to?",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                music: "spacesInBetween",
+                isConversationHub: true,
+                choices: [
+                    { text: "Talk to Dad", goto: "D_dad", convId: "dad" },
+                    { text: "Talk to Uncle Mark & Aunt Lisa", goto: "D_mark_lisa", convId: "mark_lisa" },
+                    { text: "Talk to Elle Zervas", goto: "D_elle", convId: "elle" },
+                    { text: "Talk to Chris Zervas", goto: "D_chris", convId: "chris" },
+                    { text: "Talk to Molly Schatzman", goto: "D_molly", convId: "molly" },
+                    { text: "Talk to Steph & Brett Bone", goto: "D_steph_brett", convId: "steph_brett" },
+                    { text: "Talk to Aunt Cyndi", goto: "D_cyndi", convId: "cyndi" },
+                    { text: "Wave goodbye and head to the train", goto: "B3" }
+                ]
+            },
+
+            // INDIVIDUAL CONVERSATION SCENES
+            "D_dad": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Dad",
+                dialogue: "Congratulations Cader!! You are a man of vision and perseverance. I can't wait to see where God leads you. I love you and am so proud of you!",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                markConversation: "dad",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_mark_lisa": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Uncle Mark & Aunt Lisa",
+                dialogue: "Congratulations, Cade; you've worked hard to earn your degree at St Edward's! Use what got you here for this next step in your career\u2014hard work and choosing a place that will develop you the most. The most important aspect in this next season of your vocation is attaching yourself to a person or place that will best develop you as a person. We are proud of you!",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                markConversation: "mark_lisa",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_elle": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Elle Zervas",
+                dialogue: "Cader, I am so excited for your graduation! I can't wait to see what God has planned for you! Love you so much Elle",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                markConversation: "elle",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_chris": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Chris Zervas",
+                dialogue: "Cade, Be strong and courageous. Do not tremble or be dismayed for the Lord, Your God is with you wherever you may go.",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                markConversation: "chris",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_molly": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Molly Schatzman",
+                dialogue: "Congrats Cader! So proud of you and all the work you have put in the past 4 years. I'm excited to see where the Lord takes you and how he uses your gifts and talents!",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                markConversation: "molly",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_steph_brett": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Steph & Brett Bone",
+                dialogue: "Congratulations on your graduation! You have worked diligently, and we know God has amazing plans for you ahead. Love you dearly!",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                markConversation: "steph_brett",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_cyndi": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Aunt Cyndi",
+                dialogue: "Congratulations Cade on crossing this big finish line in life! Our prayer is you will live out all your God given gifts and talents in His Divine purposes and plans to be a blessing wherever you go! We love you!",
+                dialogueStyle: "voice",
+                dialoguePosition: "bottom",
+                markConversation: "cyndi",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+
+            // BRANCH B3: LEAVE AFTER CONVERSATIONS
+            "B3": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "Somebody helps you with your suitcase. Actually, three somebodies; they all seem to really want to help.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                music: "poemsInFog",
+                next: "B3b"
+            },
+            "B3b": {
+                background: SPRITES.trainStation,
+                dialogue: "You mount the steps to your train car, take your bag from the people below, and go find your seat.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                next: "B3c"
+            },
+            "B3c": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "As you sit down, something catches the corner of your eye. Turning to look out the window, you see -- ope, yep -- all your family and friends on the platform, beaming and waving at you like absolute crazy people.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                music: "poemsInFog",
+                next: "departure_talked"
+            },
+
+            // DEPARTURE SCENES (converge here)
+            "departure_sneak": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "The huff of the train engine starts up, but as the train starts to pull away, you can still clearly hear someone call, \"We'll see you soon!\"",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                showComicText: true,
+                choices: [
+                    { text: "Say, \"I love you, too.\"", goto: "E1" },
+                    { text: "Settle into your seat and get comfortable.", goto: "E2" }
+                ]
+            },
+            "departure_talked": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                dialogue: "The huff of the train engine starts up, but as the train starts to pull away, you can still clearly hear someone call, \"We'll see you soon!\"",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
+                showComicText: true,
+                choices: [
+                    { text: "Say, \"I love you, too.\"", goto: "E1" },
+                    { text: "Settle into your seat and get comfortable.", goto: "E2" }
+                ]
+            },
+
+            // ENDING BRANCHES
+            "E1": {
+                background: SPRITES.trainStation,
+                dialogue: "They can't hear you.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "center",
+                choices: [
+                    { text: "From the bottom of your heart and deep in your diaphragm, shout, \"I LOVE YOU, TOO!\"", goto: "E3" },
+                    { text: "Geez, okay, settle into your seat and get comfortable I guess", goto: "E2" }
+                ]
+            },
+            "E3": {
+                background: SPRITES.trainStation,
+                dialogue: "The passenger in front of you startles and upends their coffee cup.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "center",
+                soundEffect: "oof",
+                next: "E3b"
+            },
+            "E3b": {
+                background: SPRITES.trainStation,
+                dialogue: "...",
+                dialogueStyle: "internal",
+                dialoguePosition: "center",
+                choices: [
+                    { text: "Offer them a handkerchief and then pretend like you're asleep", goto: "E2" }
+                ]
+            },
+            "E2": {
+                background: SPRITES.trainStation,
+                dialogue: "You settle into your seat and get comfortable at last. As the train pulls out of the station you drift into a time lapse...",
+                dialogueStyle: "narrator",
+                dialoguePosition: "center",
+                fadeTransition: true,
+                next: "finale"
+            },
+
+            // FINALE
+            "finale": {
+                background: SPRITES.city,
+                dialogue: "A skyline emerges out your window. A city. A stop. A home? You can pass it by or get off the train, but either way, it appears you have a decision to make.",
+                dialogueStyle: "narrator",
+                dialoguePosition: "bottom",
+                fadeIn: true,
+                music: "planetarium",
+                choices: [
+                    { text: "Begin the adventure", goto: "G1" }
+                ]
+            },
+
+            // JOURNEY MAP SCENE
+            "G1": {
+                background: null,
+                sprites: [{ src: SPRITES.journeyMap, class: "journeymap" }],
+                isJourneyScene: true,
+                journeyText: "Four great cities lie ready to welcome you. You may visit, or not visit, any of them as you please. Any of these cities you should choose to visit has lodging prepared for you, along with a guidelist of gaming-world locales and any letters of introduction you might desire to a certain cadre of local characters.<br><br>Beyond what is prepared are untold other wonders for your discovery alone. When you're ready, you may <a href=\"https://docs.google.com/spreadsheets/d/1t1-xVZb9OgfHaKrSYdvjro6prz3oIv9y59xI7soF3bQ/edit?usp=sharing\" target=\"_blank\">choose your own adventure</a>.",
+                isEnd: true
+            }
+        };
+
+        // ============================================
+        // GAME STATE
+        // ============================================
+        let currentScene = "title";
+        let sceneHistory = [];
+        let completedConversations = new Set();
+        let audioTracks = {};
+        let currentTrack = null;
+        let masterVolume = parseFloat(localStorage.getItem('artemisVolume')) || 0.6;
+
+        // ============================================
+        // AUDIO FUNCTIONS
+        // ============================================
+        function initAudio() {
+            Object.entries(MUSIC_TRACKS).forEach(([key, path]) => {
+                const audio = new Audio(ASSET_BASE + "/" + path);
+                audio.loop = true;
+                audio.volume = 0;
+                audioTracks[key] = audio;
+            });
+        }
+
+        function fadeAudio(audio, targetVolume, duration, callback) {
+            const steps = 60;
+            const stepTime = (duration * 1000) / steps;
+            const adjustedTarget = targetVolume * masterVolume;
+            const volumeStep = (adjustedTarget - audio.volume) / steps;
+            let step = 0;
+
+            const interval = setInterval(() => {
+                step++;
+                audio.volume = Math.max(0, Math.min(1, audio.volume + volumeStep));
+
+                if (step >= steps) {
+                    clearInterval(interval);
+                    if (targetVolume === 0) {
+                        audio.pause();
+                    }
+                    if (callback) callback();
+                }
+            }, stepTime);
+        }
+
+        function playSoundEffect(effectKey) {
+            if (!SOUND_EFFECTS[effectKey]) return;
+            const sfx = new Audio(ASSET_BASE + "/" + SOUND_EFFECTS[effectKey]);
+            sfx.volume = masterVolume;
+            sfx.play();
+            // Stop after 2.5 seconds (just the first part of the sound)
+            setTimeout(() => {
+                sfx.pause();
+                sfx.currentTime = 0;
+            }, 2500);
+        }
+
+        function playMusic(trackKey) {
+            if (trackKey === currentTrack) return;
+
+            // Fade out current (longer fade for smoother transition)
+            if (currentTrack && audioTracks[currentTrack]) {
+                fadeAudio(audioTracks[currentTrack], 0, 2.5);
+            }
+
+            // Fade in new
+            if (trackKey && audioTracks[trackKey]) {
+                currentTrack = trackKey;
+                audioTracks[trackKey].currentTime = 0;
+                audioTracks[trackKey].play();
+                fadeAudio(audioTracks[trackKey], 0.6, 2);
+            } else {
+                currentTrack = null;
+            }
+        }
+
+        // ============================================
+        // SCENE RENDERING
+        // ============================================
+        function loadScene(sceneId, addToHistory = true) {
+            const scene = scenes[sceneId];
+            if (!scene) {
+                console.error("Scene not found:", sceneId);
+                return;
+            }
+
+            // Track history for back button (don't add if going back)
+            if (addToHistory && currentScene !== "title") {
+                sceneHistory.push(currentScene);
+            }
+
+            currentScene = sceneId;
+
+            const bg = document.getElementById('background');
+            const titleBox = document.getElementById('title-box');
+            const dialogueBox = document.getElementById('dialogue-box');
+            const choicesContainer = document.getElementById('choices-container');
+            const spriteContainer = document.getElementById('sprite-container');
+            const clickIndicator = document.getElementById('click-indicator');
+            const backBtn = document.getElementById('back-btn');
+
+            // Clear previous state
+            choicesContainer.classList.remove('visible');
+            choicesContainer.innerHTML = '';
+            spriteContainer.innerHTML = '';
+            document.getElementById('journey-text').classList.remove('visible');
+            document.querySelectorAll('.comic-text').forEach(el => el.classList.remove('visible'));
+
+            // Hide dialogue box but keep it positioned off-screen during transition
+            dialogueBox.style.visibility = 'hidden';
+            dialogueBox.classList.remove('visible');
+
+            // Handle fade-in from black (after fade transition)
+            if (scene.fadeIn) {
+                const screenFade = document.getElementById('screen-fade');
+                // Fade from black after a brief moment
+                setTimeout(() => {
+                    screenFade.classList.remove('fade-out');
+                }, 500);
+            }
+
+            // Handle title screen
+            if (scene.showTitle) {
+                titleBox.classList.add('visible');
+                dialogueBox.classList.remove('visible');
+                bg.classList.remove('visible');
+                clickIndicator.classList.remove('hidden');
+            } else {
+                titleBox.classList.remove('visible');
+            }
+
+            // Handle background
+            if (scene.background) {
+                bg.src = ASSET_BASE + "/" + scene.background;
+                bg.classList.add('visible');
+
+                if (scene.timelapse) {
+                    bg.classList.add('timelapse-effect');
+                    setTimeout(() => bg.classList.remove('timelapse-effect'), 3000);
+                }
+            } else if (scene.background === null) {
+                // Explicitly hide background when set to null
+                bg.classList.remove('visible');
+            }
+
+            // Handle sprites
+            if (scene.sprites) {
+                scene.sprites.forEach(sprite => {
+                    const img = document.createElement('img');
+                    img.src = ASSET_BASE + "/" + sprite.src;
+                    img.className = 'sprite visible ' + sprite.class;
+                    spriteContainer.appendChild(img);
+                });
+            }
+
+            // Handle dialogue
+            if (scene.dialogue && !scene.showTitle) {
+                const speakerName = dialogueBox.querySelector('.speaker-name');
+                const dialogueText = dialogueBox.querySelector('.dialogue-text');
+
+                dialogueText.textContent = scene.dialogue;
+                speakerName.style.display = scene.speaker ? 'block' : 'none';
+                speakerName.textContent = scene.speaker || '';
+
+                // Set positioning classes first (while still hidden via visibility)
+                dialogueBox.className = (scene.dialogueStyle || 'narrator') + ' ' + (scene.dialoguePosition || 'bottom');
+
+                // Use requestAnimationFrame to ensure DOM has updated position before showing
+                requestAnimationFrame(() => {
+                    dialogueBox.style.visibility = 'visible';
+                    dialogueBox.classList.add('visible');
+                });
+            }
+
+            // Handle music
+            if (scene.music !== undefined) {
+                playMusic(scene.music);
+            }
+
+            // Handle sound effects
+            if (scene.soundEffect) {
+                playSoundEffect(scene.soundEffect);
+            }
+
+            // Mark conversation as completed if this is a conversation scene
+            if (scene.markConversation) {
+                completedConversations.add(scene.markConversation);
+            }
+
+            // Handle choices
+            if (scene.choices) {
+                clickIndicator.classList.add('hidden');
+                scene.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'choice-btn';
+                    btn.textContent = choice.text;
+
+                    // Check if this is a completed conversation (disable if so)
+                    const isCompletedConv = choice.convId && completedConversations.has(choice.convId);
+                    if (isCompletedConv) {
+                        btn.classList.add('disabled');
+                    }
+
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Don't allow clicking disabled buttons
+                        if (!btn.classList.contains('disabled')) {
+                            loadScene(choice.goto);
+                        }
+                    });
+                    choicesContainer.appendChild(btn);
+                });
+                setTimeout(() => choicesContainer.classList.add('visible'), 300);
+            } else if (!scene.isEnd) {
+                clickIndicator.textContent = "\u25B6 Continue";
+                clickIndicator.classList.remove('hidden');
+            }
+
+            // Handle journey scene (G1)
+            if (scene.isJourneyScene) {
+                const journeyText = document.getElementById('journey-text');
+                journeyText.innerHTML = scene.journeyText;
+                setTimeout(() => journeyText.classList.add('visible'), 300);
+            }
+
+            // Handle floating comic text (staggered for chaotic effect)
+            if (scene.showComicText) {
+                setTimeout(() => document.getElementById('comic-text-1').classList.add('visible'), 300);
+                setTimeout(() => document.getElementById('comic-text-2').classList.add('visible'), 450);
+                setTimeout(() => document.getElementById('comic-text-3').classList.add('visible'), 200);
+                setTimeout(() => document.getElementById('comic-text-4').classList.add('visible'), 550);
+            }
+
+            // Handle end
+            if (scene.isEnd) {
+                clickIndicator.textContent = "The End";
+                clickIndicator.classList.remove('hidden');
+                document.body.style.cursor = 'default';
+            }
+
+            // Handle back button visibility
+            // Show back button if there's history AND we're not on the conversation hub (has its own return) AND not title
+            if (sceneHistory.length > 0 && !scene.isConversationHub && !scene.showTitle) {
+                backBtn.classList.remove('hidden');
+            } else {
+                backBtn.classList.add('hidden');
+            }
+        }
+
+        function goBack() {
+            if (sceneHistory.length === 0) return;
+            const previousScene = sceneHistory.pop();
+            loadScene(previousScene, false);
+        }
+
+        function advance() {
+            const scene = scenes[currentScene];
+
+            // If there are choices, don't auto-advance
+            if (scene.choices || scene.isEnd) {
+                return;
+            }
+
+            // Handle fade transition (for time lapse effect)
+            if (scene.fadeTransition && scene.next) {
+                const screenFade = document.getElementById('screen-fade');
+                const clickIndicator = document.getElementById('click-indicator');
+
+                // Hide controls during transition
+                clickIndicator.classList.add('hidden');
+
+                // Fade out music
+                if (currentTrack && audioTracks[currentTrack]) {
+                    fadeAudio(audioTracks[currentTrack], 0, 2.5);
+                }
+
+                // Fade to black
+                screenFade.classList.add('fade-out');
+
+                // After fade out, load next scene
+                setTimeout(() => {
+                    loadScene(scene.next);
+                }, 2500);
+                return;
+            }
+
+            // Otherwise, go to next scene
+            if (scene.next) {
+                loadScene(scene.next);
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        initAudio();
+
+        // Volume control
+        const volumeSlider = document.getElementById('volume-slider');
+        volumeSlider.value = masterVolume * 100;
+
+        function updateVolumeIcon(volume) {
+            const icon = document.getElementById('volume-icon');
+            if (volume === 0) {
+                icon.innerHTML = '&#128263;';
+            } else if (volume < 0.3) {
+                icon.innerHTML = '&#128264;';
+            } else if (volume < 0.7) {
+                icon.innerHTML = '&#128265;';
+            } else {
+                icon.innerHTML = '&#128266;';
+            }
+        }
+
+        updateVolumeIcon(masterVolume);
+
+        volumeSlider.addEventListener('input', (e) => {
+            masterVolume = e.target.value / 100;
+            localStorage.setItem('artemisVolume', masterVolume);
+            updateVolumeIcon(masterVolume);
+
+            // Update playing audio
+            if (currentTrack && audioTracks[currentTrack]) {
+                audioTracks[currentTrack].volume = 0.6 * masterVolume;
+            }
+        });
+
+        // Click to advance
+        document.getElementById('cutscene-container').addEventListener('click', (e) => {
+            if (!e.target.closest('#controls') && !e.target.closest('#choices-container')) {
+                advance();
+            }
+        });
+
+        document.getElementById('click-indicator').addEventListener('click', (e) => {
+            e.stopPropagation();
+            advance();
+        });
+
+        // Back button
+        document.getElementById('back-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            goBack();
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                advance();
+            } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+                e.preventDefault();
+                goBack();
+            }
+        });
+
+        // iOS/Safari audio unlock - must be triggered by user interaction
+        let audioUnlocked = false;
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            Object.values(audioTracks).forEach(audio => {
+                audio.play().then(() => audio.pause()).catch(() => {});
+            });
+            audioUnlocked = true;
+        }
+        document.addEventListener('touchstart', unlockAudio, { once: true });
+        document.addEventListener('click', unlockAudio, { once: true });
+
+        // Prevent double-tap zoom on mobile
+        let lastTap = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTap < 300) {
+                e.preventDefault();
+            }
+            lastTap = now;
+        }, { passive: false });
+
+        // Start
+        setTimeout(() => loadScene('title'), 500);
+    </script>
+</body>
+</html>
