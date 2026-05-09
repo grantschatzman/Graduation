@@ -978,6 +978,14 @@
                     { text: "Talk to Molly Schatzman", goto: "D_molly", convId: "molly" },
                     { text: "Talk to Steph & Brett Bone", goto: "D_steph_brett", convId: "steph_brett" },
                     { text: "Talk to Aunt Cyndi", goto: "D_cyndi", convId: "cyndi" },
+                    { text: "Talk to Jenna Zervas", goto: "D_jenna", convId: "jenna" },
+                    { text: "Talk to Grant Schatzman", goto: "D_grant", convId: "grant" },
+                    { text: "Talk to Carson & Gabrielle Schatzman", goto: "D_carson_gabi", convId: "carson_gabi" },
+                    { text: "Talk to Laynie", goto: "D_laynie", convId: "laynie" },
+                    { text: "Talk to Daina Schatzman", goto: "D_daina", convId: "daina" },
+                    { text: "Talk to Xander", goto: "D_xander", convId: "xander" },
+                    { text: "Talk to Steve Schatzman", goto: "D_steve", convId: "steve" },
+                    { text: "Talk to Suzanne Schatzman", goto: "D_suzanne", convId: "suzanne" },
                     { text: "Wave goodbye and head to the train", goto: "B3" }
                 ]
             },
@@ -1051,6 +1059,87 @@
                 dialogueStyle: "voice",
                 dialoguePosition: "top",
                 markConversation: "cyndi",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+
+            "D_jenna": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Jenna Zervas",
+                dialogue: "Cader I'm so proud of you. Psalm is the prayer. I am praying for you. I love you.",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "jenna",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_grant": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Grant Schatzman",
+                dialogue: "Cousin - I am both amazed and unsurprised at all you've done these past few years, from forging a path in your creative field to forming deep relationships with the people and places around you. So proud of the brave, brilliant, and beautiful life you are building for yourself. Cheers to the view from the summit; may you enjoy this achievement and this moment even as your mind roams ahead.",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "grant",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_carson_gabi": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Carson & Gabrielle Schatzman",
+                dialogue: "Congratulations on reaching the graduation summit! But even more, on your journey throughout college — discovering and cultivating your self, your skills, and your sense of the world. Your perspective and creativity are valuable for so many, just as your kindness and intelligence are evident in your character and as a kind of guiding compass — we love you and can't wait to see what's next!!",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "carson_gabi",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_laynie": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Laynie",
+                dialogue: "I'm so proud of you for graduating. I'm praying for you and what comes next. Lean on God and he will guide you in your next steps.",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "laynie",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_daina": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Daina Schatzman",
+                dialogue: "Cader, you have been such a dedicated learner these last four years. I have learned about your work ethic, your intentionality both in learning and relationships, perseverance during project deadlines, and a true love of your work. I'm excited to see how God will use your gifts and talents in the next phase of your life!",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "daina",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_xander": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Xander",
+                dialogue: "You have been an incredible president, an incredible player, and an incredible DM/GM/MC/whatever else. You round out Enzar in a way I didn't know it needed. As a friend, I love you, and I'm excited for what the future holds for you. I'm also excited for what the future holds for Evelyn >:)",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "xander",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_steve": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Steve Schatzman",
+                dialogue: "Cader, as you enter this next chapter of life, remember God and seeking Him to be in control. Each opportunity has a purpose of growth, development and formation as you find roles that are a better fit and motivate you. This can provide freedom and reduce the pressure in finding the “perfect fit” and “forever job.” Wishing you God's blessings.",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "steve",
+                choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
+            },
+            "D_suzanne": {
+                background: SPRITES.trainStation,
+                sprites: [{ src: SPRITES.family, class: "family" }],
+                speaker: "Suzanne Schatzman",
+                dialogue: "To say I'm proud of you is an understatement. The journey you have walked the last 4 years has been full of various opportunities and challenges, new beginnings and knowledge. I'm excited about what God has for your future. Love you to the moon and back!!!!",
+                dialogueStyle: "voice",
+                dialoguePosition: "top",
+                markConversation: "suzanne",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
 
