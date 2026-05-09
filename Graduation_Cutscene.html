@@ -731,6 +731,160 @@
             }
         }
 
+        /* Unless / secret modal */
+        #unless-text {
+            position: absolute;
+            top: 58%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 15px;
+            font-style: italic;
+            color: rgba(245, 230, 211, 0.3);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease, color 0.3s ease, text-shadow 0.3s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(245, 230, 211, 0.1);
+            z-index: 150;
+            white-space: nowrap;
+            letter-spacing: 2px;
+        }
+
+        #unless-text.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #unless-text:hover {
+            color: rgba(245, 230, 211, 0.95);
+            text-decoration: underline;
+            text-shadow: 0 0 10px rgba(245, 230, 211, 0.5);
+        }
+
+        #secret-modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 30, 50, 0.98);
+            padding: 40px;
+            border-radius: 15px;
+            color: #F5E6D3;
+            font-size: 16px;
+            line-height: 1.8;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            width: 85%;
+            max-width: 620px;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.85);
+        }
+
+        #secret-modal.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #secret-prompt {
+            color: #D4A574;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        #secret-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(245, 230, 211, 0.35);
+            color: #F5E6D3;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            width: 220px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #secret-input:focus {
+            border-color: rgba(245, 230, 211, 0.75);
+        }
+
+        #secret-submit {
+            display: block;
+            margin: 14px auto 0;
+            background: rgba(139, 69, 69, 0.9);
+            color: #F5E6D3;
+            border: 2px solid rgba(245, 230, 211, 0.5);
+            padding: 10px 28px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #secret-submit:hover {
+            background: rgba(169, 89, 89, 0.95);
+            border-color: #F5E6D3;
+        }
+
+        #secret-result {
+            margin-top: 22px;
+            font-size: 15px;
+            line-height: 1.9;
+            text-align: left;
+            opacity: 0;
+            transition: opacity 1s ease;
+            display: none;
+        }
+
+        #secret-result.visible {
+            opacity: 1;
+            display: block;
+        }
+
+        #secret-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(245, 230, 211, 0.4);
+            font-size: 22px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: color 0.2s ease;
+            padding: 4px 8px;
+            line-height: 1;
+        }
+
+        #secret-close:hover {
+            color: rgba(245, 230, 211, 1);
+        }
+
+        #secret-retry {
+            display: none;
+            margin: 20px auto 0;
+            background: transparent;
+            color: rgba(245, 230, 211, 0.5);
+            border: 1px solid rgba(245, 230, 211, 0.25);
+            padding: 8px 22px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #secret-retry:hover {
+            color: rgba(245, 230, 211, 0.95);
+            border-color: rgba(245, 230, 211, 0.7);
+        }
+
         /* Prevent text selection on touch devices */
         @media (pointer: coarse) {
             * {
@@ -762,6 +916,7 @@
         <div id="journey-text"></div>
 
         <div id="credits-box"></div>
+        <div id="unless-text">Unless…?</div>
 
         <div id="comic-text-1" class="comic-text">WE LOVE YOU!</div>
         <div id="comic-text-2" class="comic-text">we love you!!</div>
@@ -769,6 +924,17 @@
         <div id="comic-text-4" class="comic-text">WE LOVE YOU!</div>
 
         <div id="screen-fade"></div>
+
+        <div id="secret-modal">
+            <button id="secret-close" type="button">×</button>
+            <div id="secret-form">
+                <div id="secret-prompt">Special message off-limits. Authentication required.<br>Enter a name to continue:</div>
+                <input type="text" id="secret-input" autocomplete="off" spellcheck="false">
+                <button id="secret-submit" type="button">Decode</button>
+            </div>
+            <div id="secret-result"></div>
+            <button id="secret-retry" type="button">Try again</button>
+        </div>
 
         <div id="controls">
             <div id="volume-control">
@@ -791,7 +957,8 @@
             planetarium: "Music/021 - Sugar Star Planetarium.mp3",
             byYourSide: "Music/005 - By Your Side. (1).mp3",
             spacesInBetween: "Music/004 - Spaces In-Between.mp3",
-            poemsInFog: "Music/018 - Poems In The Fog (1).mp3"
+            poemsInFog: "Music/018 - Poems In The Fog (1).mp3",
+            memory: "Music/34 - Memory.mp3"
         };
 
         const SOUND_EFFECTS = {
@@ -805,6 +972,49 @@
             city: "Sprites/City.png",
             journeyMap: "Sprites/JourneyMap.png"
         };
+
+        // ============================================
+        // SECRET MESSAGE
+        // ============================================
+        const SECRET_CIPHER = [
+            84,107,109,120,102,98,108,44,32,66,32,112,98,101,101,32,116,101,112,116,114,108,32,
+            117,120,32,108,104,32,97,104,103,104,107,120,119,32,109,97,116,109,32,114,104,110,32,
+            118,97,104,108,120,32,109,104,32,109,107,110,108,109,32,102,120,32,109,104,32,108,120,
+            120,32,109,97,120,32,105,116,107,109,108,32,104,121,32,114,104,110,32,109,97,116,109,32,
+            97,116,111,120,32,117,101,104,108,108,104,102,120,119,32,116,109,32,76,109,46,32,
+            88,119,112,116,107,119,108,46,32,69,120,116,107,103,98,103,122,32,114,104,110,107,32,
+            103,116,102,120,44,32,105,101,116,114,98,103,122,32,114,104,110,107,32,122,116,102,120,
+            108,44,32,102,120,120,109,98,103,122,32,114,104,110,107,32,105,116,107,109,103,120,107,
+            44,32,97,116,111,98,103,122,32,114,104,110,32,98,103,32,102,114,32,97,104,102,120,32,
+            98,103,32,73,97,98,101,101,114,44,32,116,101,101,32,104,121,32,98,109,32,97,116,108,32,
+            121,98,101,101,120,119,32,102,120,32,112,98,109,97,32,108,104,32,102,110,118,97,32,99,
+            104,114,32,121,104,107,32,109,97,120,32,99,104,110,107,103,120,114,32,114,104,110,39,
+            107,120,32,104,103,32,116,103,119,32,120,113,118,98,109,120,102,120,103,109,32,121,104,
+            107,32,109,97,120,32,120,113,109,120,103,109,32,109,97,116,109,32,66,32,122,120,109,32,
+            109,104,32,112,98,109,103,120,108,108,32,116,103,119,32,98,103,109,120,107,108,120,118,
+            109,32,112,98,109,97,32,98,109,46,32,86,104,102,120,32,101,98,111,120,32,107,120,103,
+            109,45,121,107,120,120,32,98,103,32,102,114,32,116,105,116,107,109,102,120,103,109,32,
+            121,104,107,32,116,32,121,120,112,32,112,120,120,100,108,32,116,103,119,32,102,116,100,
+            120,32,116,32,122,116,102,120,32,112,98,109,97,32,102,120,32,108,104,102,120,109,98,102,
+            120,44,32,112,98,101,101,32,114,104,110,63,46
+        ];
+
+        function computeNameShift(name) {
+            let sum = 0;
+            for (const ch of name.toUpperCase()) {
+                if (ch >= 'A' && ch <= 'Z') sum += ch.charCodeAt(0) - 64;
+            }
+            return sum;
+        }
+
+        function decryptCipher(shift) {
+            const s = ((shift % 26) + 26) % 26;
+            return SECRET_CIPHER.map(code => {
+                if (code >= 65 && code <= 90) return String.fromCharCode(((code - 65 + s) % 26) + 65);
+                if (code >= 97 && code <= 122) return String.fromCharCode(((code - 97 + s) % 26) + 97);
+                return String.fromCharCode(code);
+            }).join('');
+        }
 
         // ============================================
         // SCENE DEFINITIONS (Decision Tree)
@@ -1377,6 +1587,7 @@
             spriteContainer.innerHTML = '';
             document.getElementById('journey-text').classList.remove('visible');
             document.getElementById('credits-box').classList.remove('visible');
+            document.getElementById('unless-text').classList.remove('visible');
             document.querySelectorAll('.comic-text').forEach(el => el.classList.remove('visible'));
 
             // Hide dialogue box but keep it positioned off-screen during transition
@@ -1529,6 +1740,11 @@
                             creditsBox.classList.remove('visible');
                             setTimeout(showNextCredit, 800);
                         }, 2500);
+                    } else {
+                        setTimeout(() => {
+                            const unlessEl = document.getElementById('unless-text');
+                            requestAnimationFrame(() => requestAnimationFrame(() => unlessEl.classList.add('visible')));
+                        }, 1500);
                     }
                 }
 
@@ -1639,7 +1855,7 @@
 
         // Click to advance
         document.getElementById('cutscene-container').addEventListener('click', (e) => {
-            if (!e.target.closest('#controls') && !e.target.closest('#choices-container')) {
+            if (!e.target.closest('#controls') && !e.target.closest('#choices-container') && !e.target.closest('#secret-modal') && !e.target.closest('#unless-text')) {
                 advance();
             }
         });
@@ -1687,6 +1903,81 @@
             }
             lastTap = now;
         }, { passive: false });
+
+        // ============================================
+        // SECRET MESSAGE HANDLERS
+        // ============================================
+        function resetSecretForm() {
+            document.getElementById('secret-form').style.display = '';
+            document.getElementById('secret-result').style.display = 'none';
+            document.getElementById('secret-result').classList.remove('visible');
+            document.getElementById('secret-result').textContent = '';
+            document.getElementById('secret-retry').style.display = 'none';
+            document.getElementById('secret-input').value = '';
+        }
+
+        function showSecretModal() {
+            resetSecretForm();
+            document.getElementById('secret-modal').classList.add('visible');
+            setTimeout(() => document.getElementById('secret-input').focus(), 100);
+        }
+
+        function hideSecretModal() {
+            document.getElementById('secret-modal').classList.remove('visible');
+            setTimeout(resetSecretForm, 500);
+        }
+
+        function handleSecretSubmit() {
+            const input = document.getElementById('secret-input');
+            const result = document.getElementById('secret-result');
+            const name = input.value.trim();
+            if (!name) return;
+
+            const shift = computeNameShift(name);
+            const decrypted = decryptCipher(shift);
+
+            result.style.display = 'block';
+            result.textContent = decrypted;
+            requestAnimationFrame(() => requestAnimationFrame(() => result.classList.add('visible')));
+
+            if (shift === 85) playMusic('memory');
+
+            document.getElementById('secret-form').style.display = 'none';
+            document.getElementById('secret-retry').style.display = 'block';
+        }
+
+        document.getElementById('unless-text').addEventListener('touchend', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            showSecretModal();
+        }, { passive: false });
+
+        document.getElementById('unless-text').addEventListener('click', e => {
+            e.stopPropagation();
+            showSecretModal();
+        });
+
+        document.getElementById('secret-close').addEventListener('click', e => {
+            e.stopPropagation();
+            hideSecretModal();
+        });
+
+        document.getElementById('secret-retry').addEventListener('click', e => {
+            e.stopPropagation();
+            resetSecretForm();
+            setTimeout(() => document.getElementById('secret-input').focus(), 50);
+        });
+
+        document.getElementById('secret-submit').addEventListener('click', e => {
+            e.stopPropagation();
+            handleSecretSubmit();
+        });
+
+        document.getElementById('secret-input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.stopPropagation(); handleSecretSubmit(); }
+        });
+
+        document.getElementById('secret-modal').addEventListener('click', e => e.stopPropagation());
 
         // Start
         setTimeout(() => loadScene('title'), 500);
