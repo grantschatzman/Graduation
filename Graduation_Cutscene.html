@@ -839,7 +839,6 @@
                 dialogue: "The train is ready for you to board. Smoke begins to trickle out the locomotive's stack as the conductor stokes the firebox. As you reach for your suitcase, you notice some commotion by the station entrance.",
                 dialogueStyle: "narrator",
                 dialoguePosition: "top",
-                music: null,
                 soundEffect: "trainWhistle",
                 next: "intro4"
             },
@@ -872,8 +871,8 @@
                 background: SPRITES.trainStation,
                 sprites: [{ src: SPRITES.family, class: "family" }],
                 dialogue: "Oh. It's your family and your friends. They want to send you off.",
-                dialogueStyle: "internal",
-                dialoguePosition: "center",
+                dialogueStyle: "narrator",
+                dialoguePosition: "top",
                 next: "intro7"
             },
             "intro7": {
@@ -990,7 +989,7 @@
                 speaker: "Dad",
                 dialogue: "Congratulations Cader!! You are a man of vision and perseverance. I can't wait to see where God leads you. I love you and am so proud of you!",
                 dialogueStyle: "voice",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 markConversation: "dad",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
@@ -1000,7 +999,7 @@
                 speaker: "Uncle Mark & Aunt Lisa",
                 dialogue: "Congratulations, Cade; you've worked hard to earn your degree at St Edward's! Use what got you here for this next step in your career\u2014hard work and choosing a place that will develop you the most. The most important aspect in this next season of your vocation is attaching yourself to a person or place that will best develop you as a person. We are proud of you!",
                 dialogueStyle: "voice",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 markConversation: "mark_lisa",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
@@ -1010,7 +1009,7 @@
                 speaker: "Elle Zervas",
                 dialogue: "Cader, I am so excited for your graduation! I can't wait to see what God has planned for you! Love you so much Elle",
                 dialogueStyle: "voice",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 markConversation: "elle",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
@@ -1020,7 +1019,7 @@
                 speaker: "Chris Zervas",
                 dialogue: "Cade, Be strong and courageous. Do not tremble or be dismayed for the Lord, Your God is with you wherever you may go.",
                 dialogueStyle: "voice",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 markConversation: "chris",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
@@ -1030,7 +1029,7 @@
                 speaker: "Molly Schatzman",
                 dialogue: "Congrats Cader! So proud of you and all the work you have put in the past 4 years. I'm excited to see where the Lord takes you and how he uses your gifts and talents!",
                 dialogueStyle: "voice",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 markConversation: "molly",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
@@ -1040,7 +1039,7 @@
                 speaker: "Steph & Brett Bone",
                 dialogue: "Congratulations on your graduation! You have worked diligently, and we know God has amazing plans for you ahead. Love you dearly!",
                 dialogueStyle: "voice",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 markConversation: "steph_brett",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
@@ -1050,7 +1049,7 @@
                 speaker: "Aunt Cyndi",
                 dialogue: "Congratulations Cade on crossing this big finish line in life! Our prayer is you will live out all your God given gifts and talents in His Divine purposes and plans to be a blessing wherever you go! We love you!",
                 dialogueStyle: "voice",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 markConversation: "cyndi",
                 choices: [{ text: "Return to conversations", goto: "conversation_hub" }]
             },
@@ -1150,7 +1149,7 @@
                 background: SPRITES.city,
                 dialogue: "A skyline emerges out your window. A city. A stop. A home? You can pass it by or get off the train, but either way, it appears you have a decision to make.",
                 dialogueStyle: "narrator",
-                dialoguePosition: "bottom",
+                dialoguePosition: "top",
                 fadeIn: true,
                 music: "planetarium",
                 choices: [
